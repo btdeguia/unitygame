@@ -1,119 +1,209 @@
 <!DOCTYPE html>
 <html lang="en-us">
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <title>Unity WebGL Player | spudknight</title>
-    <link rel="shortcut icon" href="TemplateData/favicon.ico">
-    <link rel="stylesheet" href="TemplateData/style.css">
-  </head>
-  <body>
-    <div id="unity-container" class="unity-desktop">
-      <canvas id="unity-canvas" width=960 height=540></canvas>
-      <div id="unity-loading-bar">
-        <div id="unity-logo"></div>
-        <div id="unity-progress-bar-empty">
-          <div id="unity-progress-bar-full"></div>
-        </div>
-      </div>
-      <div id="unity-warning"> </div>
-      <div id="unity-footer">
-        <div id="unity-webgl-logo"></div>
-        <div id="unity-fullscreen-button"></div>
-        <div id="unity-build-title">spudknight</div>
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <title>Spudknight</title>
+  <link rel="shortcut icon" href="TemplateData/favicon.ico">
+  <link rel="stylesheet" href="TemplateData/style.css">
+  <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+  <div id="unity-container" class="unity-desktop">
+    <canvas id="unity-canvas" width=960 height=540></canvas>
+    <div id="unity-loading-bar">
+      <div id="unity-logo"></div>
+      <div id="unity-progress-bar-empty">
+        <div id="unity-progress-bar-full"></div>
       </div>
     </div>
-    <script>
-      var container = document.querySelector("#unity-container");
-      var canvas = document.querySelector("#unity-canvas");
-      var loadingBar = document.querySelector("#unity-loading-bar");
-      var progressBarFull = document.querySelector("#unity-progress-bar-full");
-      var fullscreenButton = document.querySelector("#unity-fullscreen-button");
-      var warningBanner = document.querySelector("#unity-warning");
+    <div id="unity-warning"> </div>
+    <div id="unity-footer">
+      <div id="unity-webgl-logo"></div>
+      <div id="unity-fullscreen-button"></div>
+      <div id="unity-build-title">spudknight</div>
+    </div>
+  </div>
+  <script>
+    var container = document.querySelector("#unity-container");
+    var canvas = document.querySelector("#unity-canvas");
+    var loadingBar = document.querySelector("#unity-loading-bar");
+    var progressBarFull = document.querySelector("#unity-progress-bar-full");
+    var fullscreenButton = document.querySelector("#unity-fullscreen-button");
+    var warningBanner = document.querySelector("#unity-warning");
 
-      // Shows a temporary message banner/ribbon for a few seconds, or
-      // a permanent error message on top of the canvas if type=='error'.
-      // If type=='warning', a yellow highlight color is used.
-      // Modify or remove this function to customize the visually presented
-      // way that non-critical warnings and error messages are presented to the
-      // user.
-      function unityShowBanner(msg, type) {
-        function updateBannerVisibility() {
-          warningBanner.style.display = warningBanner.children.length ? 'block' : 'none';
-        }
-        var div = document.createElement('div');
-        div.innerHTML = msg;
-        warningBanner.appendChild(div);
-        if (type == 'error') div.style = 'background: red; padding: 10px;';
-        else {
-          if (type == 'warning') div.style = 'background: yellow; padding: 10px;';
-          setTimeout(function() {
-            warningBanner.removeChild(div);
-            updateBannerVisibility();
-          }, 5000);
-        }
-        updateBannerVisibility();
+    // Shows a temporary message banner/ribbon for a few seconds, or
+    // a permanent error message on top of the canvas if type=='error'.
+    // If type=='warning', a yellow highlight color is used.
+    // Modify or remove this function to customize the visually presented
+    // way that non-critical warnings and error messages are presented to the
+    // user.
+    function unityShowBanner(msg, type) {
+      function updateBannerVisibility() {
+        warningBanner.style.display = warningBanner.children.length ? 'block' : 'none';
       }
-
-      var buildUrl = "Build";
-      var loaderUrl = buildUrl + "/Builds.loader.js";
-      var config = {
-        dataUrl: buildUrl + "/Builds.data",
-        frameworkUrl: buildUrl + "/Builds.framework.js",
-        codeUrl: buildUrl + "/Builds.wasm",
-        streamingAssetsUrl: "StreamingAssets",
-        companyName: "DefaultCompany",
-        productName: "spudknight",
-        productVersion: "1.0",
-        showBanner: unityShowBanner,
-      };
-
-      // By default Unity keeps WebGL canvas render target size matched with
-      // the DOM size of the canvas element (scaled by window.devicePixelRatio)
-      // Set this to false if you want to decouple this synchronization from
-      // happening inside the engine, and you would instead like to size up
-      // the canvas DOM size and WebGL render target sizes yourself.
-      // config.matchWebGLToCanvasSize = false;
-
-      if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
-        // Mobile device style: fill the whole browser client area with the game canvas:
-
-        var meta = document.createElement('meta');
-        meta.name = 'viewport';
-        meta.content = 'width=device-width, height=device-height, initial-scale=1.0, user-scalable=no, shrink-to-fit=yes';
-        document.getElementsByTagName('head')[0].appendChild(meta);
-        container.className = "unity-mobile";
-        canvas.className = "unity-mobile";
-
-        // To lower canvas resolution on mobile devices to gain some
-        // performance, uncomment the following line:
-        // config.devicePixelRatio = 1;
-
-        unityShowBanner('WebGL builds are not supported on mobile devices.');
-      } else {
-        // Desktop style: Render the game canvas in a window that can be maximized to fullscreen:
-
-        canvas.style.width = "960px";
-        canvas.style.height = "540px";
+      var div = document.createElement('div');
+      div.innerHTML = msg;
+      warningBanner.appendChild(div);
+      if (type == 'error') div.style = 'background: red; padding: 10px;';
+      else {
+        if (type == 'warning') div.style = 'background: yellow; padding: 10px;';
+        setTimeout(function () {
+          warningBanner.removeChild(div);
+          updateBannerVisibility();
+        }, 5000);
       }
+      updateBannerVisibility();
+    }
 
-      loadingBar.style.display = "block";
+    var buildUrl = "Build";
+    var loaderUrl = buildUrl + "/Builds.loader.js";
+    var config = {
+      dataUrl: buildUrl + "/Builds.data",
+      frameworkUrl: buildUrl + "/Builds.framework.js",
+      codeUrl: buildUrl + "/Builds.wasm",
+      streamingAssetsUrl: "StreamingAssets",
+      companyName: "DefaultCompany",
+      productName: "spudknight",
+      productVersion: "1.0",
+      showBanner: unityShowBanner,
+    };
 
-      var script = document.createElement("script");
-      script.src = loaderUrl;
-      script.onload = () => {
-        createUnityInstance(canvas, config, (progress) => {
-          progressBarFull.style.width = 100 * progress + "%";
-        }).then((unityInstance) => {
-          loadingBar.style.display = "none";
-          fullscreenButton.onclick = () => {
-            unityInstance.SetFullscreen(1);
-          };
-        }).catch((message) => {
-          alert(message);
-        });
-      };
-      document.body.appendChild(script);
-    </script>
-  </body>
+    // By default Unity keeps WebGL canvas render target size matched with
+    // the DOM size of the canvas element (scaled by window.devicePixelRatio)
+    // Set this to false if you want to decouple this synchronization from
+    // happening inside the engine, and you would instead like to size up
+    // the canvas DOM size and WebGL render target sizes yourself.
+    // config.matchWebGLToCanvasSize = false;
+
+    if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
+      // Mobile device style: fill the whole browser client area with the game canvas:
+
+      var meta = document.createElement('meta');
+      meta.name = 'viewport';
+      meta.content = 'width=device-width, height=device-height, initial-scale=1.0, user-scalable=no, shrink-to-fit=yes';
+      document.getElementsByTagName('head')[0].appendChild(meta);
+      container.className = "unity-mobile";
+      canvas.className = "unity-mobile";
+
+      // To lower canvas resolution on mobile devices to gain some
+      // performance, uncomment the following line:
+      // config.devicePixelRatio = 1;
+
+      unityShowBanner('WebGL builds are not supported on mobile devices.');
+    } else {
+      // Desktop style: Render the game canvas in a window that can be maximized to fullscreen:
+
+      canvas.style.width = "960px";
+      canvas.style.height = "540px";
+    }
+
+    loadingBar.style.display = "block";
+
+    var script = document.createElement("script");
+    script.src = loaderUrl;
+    script.onload = () => {
+      createUnityInstance(canvas, config, (progress) => {
+        progressBarFull.style.width = 100 * progress + "%";
+      }).then((unityInstance) => {
+        loadingBar.style.display = "none";
+        fullscreenButton.onclick = () => {
+          unityInstance.SetFullscreen(1);
+        };
+      }).catch((message) => {
+        alert(message);
+      });
+    };
+    document.body.appendChild(script);
+  </script>
+  <div id="centered-div">
+    <img src="Images/logo.png" height="120px" width="auto" style="display: block;
+    margin-left: auto;
+    margin-right: auto;">
+    <h1>Description</h1>
+    <p><i>Spud Knight</i> is a 2D, rogue-like, dungeon crawler game where you play as a potato, fighting your way
+      through a castle defeating other potatoes with kitchen utensils. As you make your way through the castle your
+      objective is defeat all the enemies, including the final boss.
+      The player traverses through the dungeon starting with a basic peeler as we their weapon and a cutting board for
+      their shield. Use the shield to block, or parry attacks if timed correctly.
+      The player is tasked with finding openings through shielding and movement to attack their enemy.
+    </p>
+    <h1>Running Game</h1>
+    <div style="height: 600px;"></div>
+    <h1>Playtesting Reports</h1>
+    <p>See link <a href="https://docs.google.com/document/d/17ZeVZY6O9_usacsc1IekWudV51wQ-FvU8UnVTjuFMBk/edit">here</a> for <b><i>external - outside the classroom</i></b> playtesting reports.</p>
+    <p>See link <a href="https://docs.google.com/spreadsheets/d/1lcee8f_t6t3vVv-RQ5Nxp0v09vy2UOQSheX77CIl0OM/edit?usp=sharing">here</a> for <b><i>internal - inside the classroom</i></b> playtesting reports.</p>
+    <h1>Credits</h1>
+    <p>
+      <strong>Developers:</strong> Brandon DeGuia, Ali Ibrahim, Aman Swaroop, Safwaan Taher <br>
+      <strong>Artist:</strong> Brandon DeGuia <br>
+      <strong>Sound Designer:</strong> Aman Swaroop <br>
+      <strong>Contact Us:</strong> <a href="mailto:bdeguia@uw.edu">bdeguia@uw.edu</a>
+    </p>
+    <h1>References</h1>
+    <p>See link <a
+        href="https://docs.google.com/document/d/1nuTCNZ3Jcs4o0g5ntSEsQNdKz5uVd3jC_QUV4t8aB3c/edit?usp=sharing">here</a>
+      for references.</p>
+    <h1>Trailer</h1>
+    <iframe src="https://drive.google.com/file/d/1qV1HeewlzA782n72tHVbPdvJZjqOn5XH/preview" width="960px" height="540px"
+      allow="autoplay"></iframe>
+    <h1>Screenshots</h1>
+    <h2>Map</h2>
+    <img src="Images/gameplay1.png" style="width: 960px;">
+    <h2>Enemy Combat</h2>
+    <img src="Images/gameplay2.png" style="width: 960px;">
+    <h2>Parry</h2>
+    <img src="Images/Parry.png" style="width: 960px;">
+    <h2>Attacking</h2>
+    <img src="Images/Attacking.png" style="width: 960px;">
+    <h2>Boss Battle</h2>
+    <img src="Images/Boss Battle.png" style="width: 960px;">
+    <h1>Source Code</h1>
+    <p>See link <a href="https://github.com/btdeguia/spudknight/tree/ali-fever-session">here</a> for source code.</p>
+    <h1>Postmortem Presentation</h1>
+    <p>See link <a
+        href="https://docs.google.com/presentation/d/1e0zjI_XKKbO4z-3QIXAKBqzSrhceYfkIi9HxcX8_Oqo/edit?usp=sharing">here</a>
+      for postmortem presentation.</p>
+    <h1>Game Presentation</h1>
+    <p>See link <a
+        href="https://docs.google.com/presentation/d/1sPS8uPhu8kwoYHgovSPl3pc0mcXHbD3F7JDpF3zsQ9o/edit?usp=sharing">here</a>
+      for game presentation.</p>
+    <h1>Team Reflection</h1>
+    <p><b><i>What is the one thing your team did really well? What evidence can you show for it?</i></b></p>
+    <p>
+      Brandon DeGuia: I think we worked really well together in terms of development cohesion. We were able to
+      collaborate on the same GitHub project simultaneously without causing merge conflicts or working on the same
+      thing.
+    </p>
+    <p>
+      Ali Ibrahim: I feel we had good communication and overall talks about the design of the game, the combat mechanics
+      are very specific and behave as we had expected it to from the start, this is because we specificed the design of
+      the combat early on.
+    </p>
+    <p>
+      Aman Swaroop: I feel like we worked very well as a unit. Overall, we communicated very clearly on everything and
+      had a clear expectation from everyone to contribute to the final project so that we can succeed as a group.
+    </p>
+    <p>
+      Safwaan Taher: Overall the game mechanics and art were well done and our team communication was likewise well done. 
+      The map, characters, animations and fighting mechanics are all evidence of this
+    </p>
+    <p><b><i>If you had another 2-weeks to work on the game, what would be the 3 highest priority items</i></b></p>
+    <p>
+      Brandon DeGuia: Minimap, Healh Regeneration, Dash Mechanics
+    </p>
+    <p>
+      Ali Ibrahim: Minimap, playtesting/debugging, health regeneration design
+    </p>
+    <p>
+      Aman Swaroop: Minimap, health regeneration, even more powerful weapons.
+    </p>
+    <p>
+      Safwaan Taher: Minimap, health regeneration, and a star tracking
+    </p>
+  </div>
+</body>
+
 </html>
